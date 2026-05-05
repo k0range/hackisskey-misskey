@@ -46,13 +46,6 @@ jobs:
              '.version = (.version + "-hack." + $sha)' \
              package.json > tmp.json
           mv tmp.json package.json
-      - name: Append commit hash to version
-        run: |
-          SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)
-          jq --arg sha "$SHORT_SHA" \
-             '.version = (.version + "-hack." + $sha)' \
-             package.json > tmp.json
-          mv tmp.json package.json
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Docker meta
