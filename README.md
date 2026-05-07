@@ -6,7 +6,6 @@
 **🌎 **Misskey** is an open source, federated social media platform that's free forever! 🚀**
 
 [Learn more](https://misskey-hub.net/)
-.
 
 ---
 
