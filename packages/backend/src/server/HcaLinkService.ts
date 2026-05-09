@@ -7,21 +7,6 @@ import type { FastifyInstance, FastifyPluginOptions } from "fastify";
 import jwt from "jsonwebtoken"
 import jwkToPem, { JWK } from "jwk-to-pem";
 
-interface HcaUserInfoData {
-	identity: {
-		id: string;
-		ysws_eligible?: boolean;
-		verification_status?: boolean,
-		first_name?: string;
-		last_name?: string;
-		primary_email?: string;
-		slack_id?: string;
-		phone_number?: string;
-		birthday?: string;
-	},
-	scopes: ("email" | "name" | "verification_status" | "slack_id" | "basic_info" | "address" | "legal_name")[]
-}
-
 @Injectable()
 export class HcaLinkService {
 	private logger: Logger;
