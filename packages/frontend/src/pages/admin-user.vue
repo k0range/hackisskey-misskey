@@ -46,11 +46,17 @@ SPDX-License-Identifier: AGPL-3.0-only
 					</MkKeyValue>
 					<MkKeyValue v-if="info" oneline>
 						<template #key>Hack Club Account ID</template>
-						<template #value><span class="_monospace">{{ info.hcaId }}</span></template>
+						<template #value>
+							<span v-if="info.slackId" class="_monospace">{{ info.hcaId }}</span>
+							<span :class="$style.none" v-else>(none)</span>
+						</template>
 					</MkKeyValue>
 					<MkKeyValue v-if="info" oneline>
 						<template #key>Slack ID</template>
-						<template #value><MkLink :url="`https://hackclub.enterprise.slack.com/team/${info.slackId}`">{{ info.slackId }}</MkLink></template>
+						<template #value>
+							<MkLink v-if="info.slackId" :url="`https://hackclub.enterprise.slack.com/team/${info.slackId}`">{{ info.slackId }}</MkLink>
+							<span :class="$style.none" v-else>(none)</span>
+						</template>
 					</MkKeyValue>
 					<MkKeyValue v-if="info" oneline>
 						<template #key>{{ i18n.ts.email }}</template>
@@ -698,5 +704,9 @@ definePage(() => ({
 	padding: 8px 12px;
 	border-radius: 6px;
 	cursor: pointer;
+}
+
+.none {
+	opacity: 0.5
 }
 </style>

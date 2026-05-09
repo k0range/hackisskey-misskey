@@ -295,7 +295,6 @@ import * as Misskey from "misskey-js";
 import * as config from "@@/js/config.js";
 import MkButton from "./MkButton.vue";
 import MkInput from "./MkInput.vue";
-import HkHackFeatureBadge from "./HkHackFeatureBadge.vue";
 import type { Captcha } from "@/components/MkCaptcha.vue";
 import MkCaptcha from "@/components/MkCaptcha.vue";
 import * as os from "@/os.js";

@@ -36,11 +36,11 @@ export class MiUserPending {
 	@Column('varchar', {
 		length: 32, nullable: true
 	})
-	public hcaId: string;
+	public hcaId?: string;
 
 	@Index()
 	@Column('varchar', {
 		length: 16, nullable: true
 	})
-	public slackId: string;
+	public slackId?: string;
 }

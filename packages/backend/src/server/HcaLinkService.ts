@@ -49,7 +49,10 @@ export class HcaLinkService {
 					grant_type: "authorization_code"
 				})
 			})
-			tokenResponse.ok || reply.code(500).send("Failed to get token from HCA")
+			if (!tokenResponse.ok) {
+				reply.code(500).send("Failed to get token from HCA")
+				return
+			}
 			const tokenData = await tokenResponse.json() as {
 			  access_token: string,
 			  token_type: "Bearer",
@@ -59,7 +62,6 @@ export class HcaLinkService {
 				created_at: number;
 				id_token: string;
 			};
-			console.log(tokenData)
 
 			const jwksResponse = await fetch("https://auth.hackclub.com/oauth/discovery/keys")
 			jwksResponse.ok || reply.code(500).send("Failed to get JWKS from HCA")
@@ -75,9 +77,10 @@ export class HcaLinkService {
 			const signingKey = jwksData.keys.find(key => key.kid === jwt.decode(tokenData.id_token, { complete: true })?.header.kid)
 			if (!signingKey) {
 				reply.code(500).send("Failed to find signing key for HCA token")
+				return
 			}
 
-			const oidTokenPayload = jwt.verify(tokenData.id_token, jwkToPem(signingKey! as JWK), {
+			const oidTokenPayload = jwt.verify(tokenData.id_token, jwkToPem(signingKey as JWK), {
 				algorithms: ["RS256"],
 				audience: this.config.hcaClientId,
 				issuer: "https://auth.hackclub.com"

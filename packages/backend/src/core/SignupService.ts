@@ -55,8 +55,8 @@ export class SignupService {
 		passwordHash?: MiUserProfile['password'] | null;
 		host?: string | null;
 		ignorePreservedUsernames?: boolean;
-		hcaId: string;
-		slackId: string;
+		hcaId?: string;
+		slackId?: string;
 	}) {
 		const { username, password, passwordHash, host, hcaId, slackId } = opts;
 		let hash = passwordHash;

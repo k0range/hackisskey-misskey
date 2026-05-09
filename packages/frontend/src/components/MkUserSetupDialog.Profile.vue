@@ -7,7 +7,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 <div class="_gaps">
 	<MkInfo>{{ i18n.ts._initialAccountSetting.theseSettingsCanEditLater }}</MkInfo>
 
-	<MkButton @click="importFromSlack">
+	<MkButton v-if="$i.slackId" @click="importFromSlack">
 		<i class="ti ti-brand-slack"></i> Import profiles from Slack
 	</MkButton>
 

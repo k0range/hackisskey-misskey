@@ -40,7 +40,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onBeforeUnmount, ref } from 'vue';
+import { onBeforeUnmount, onMounted, ref } from 'vue';
 import HkHackFeatureBadge from './HkHackFeatureBadge.vue';
 import MkButton from './MkButton.vue';
 
@@ -91,8 +91,6 @@ async function onMessageListener(event: MessageEvent<any>) {
 }
 
 function linkHCA() {
-	window.addEventListener("message", onMessageListener)
-	
 	if (window.open) {
 		const width = 600;
   	const height = 700;
@@ -107,6 +105,10 @@ function linkHCA() {
     a.click();
 	}
 }
+
+onMounted(() => {
+	window.addEventListener("message", onMessageListener)
+})
 
 onBeforeUnmount(() => {
 	window.removeEventListener("message", onMessageListener)
