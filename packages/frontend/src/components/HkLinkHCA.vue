@@ -52,6 +52,8 @@ const linkedHcaUserInfo = ref<{
 	slackId?: string;
 } | null>(null)
 
+const validStates = ref<string[]>([])
+
 const emit = defineEmits(['update:hcaToken']);
 
 function reset() {
@@ -63,6 +65,11 @@ async function onMessageListener(event: MessageEvent<any>) {
 	if (event.origin !== window.location.origin) return;
 
 	if (!('type' in event.data && event.data.type === "hca-link")) return;
+
+	if (event.data.state == null || !validStates.value.includes(event.data.state)) {
+		console.warn("Received hca-link message with invalid state", event.data);
+		return;
+	}
 
 	linkedHcaUserInfo.value = {
 		hcaToken: event.data.token,
@@ -91,28 +98,31 @@ async function onMessageListener(event: MessageEvent<any>) {
 }
 
 function linkHCA() {
+	var S="abcdefghijklmnopqrstuvwxyz0123456789"
+	var N=32
+	const state = Array.from(crypto.getRandomValues(new Uint8Array(N))).map((n)=>S[n%S.length]).join('')
+	validStates.value.push(state);
+
 	if (window.open) {
 		const width = 600;
   	const height = 700;
   	const left = (screen.width / 2) - (width / 2);
   	const top = (screen.height / 2) - (height / 2);
 
-		window.open("/link-hca", undefined, `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`)
+		window.open("/link-hca?state="+state, undefined, `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`)
 	} else {
 		const a = document.createElement('a');
-    a.href = "/link-hca";
+    a.href = "/link-hca?state="+state;
     a.target = '_blank';
     a.click();
 	}
 }
 
 onMounted(() => {
-	window.addEventListener("message", onMessageListener)
+	const bc = new BroadcastChannel('hca_link');
+	bc.onmessage = onMessageListener;
 })
 
-onBeforeUnmount(() => {
-	window.removeEventListener("message", onMessageListener)
-})
 </script>
 
 <style lang="scss" module>

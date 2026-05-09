@@ -21,20 +21,28 @@ export class HcaLinkService {
 	@bindThis
 	public createServer(fastify: FastifyInstance, options: FastifyPluginOptions, done: (err?: Error) => void) {
 		fastify.get('/link-hca', async (request, reply) => {
+			const { state } = request.query as { state?: string };
+			if (!state) {
+				reply.code(400).send("State is required")
+				return
+			}
+
 			const scopes = ["openid", "slack_id"]
 
 			const redirectUrl = new URL("https://auth.hackclub.com/oauth/authorize")
 			redirectUrl.searchParams.append("client_id", this.config.hcaClientId)
 			redirectUrl.searchParams.append("redirect_uri", this.config.url+'/hca-callback')
 			redirectUrl.searchParams.append("response_type", "code")
+			redirectUrl.searchParams.append("state", state)
 			redirectUrl.searchParams.append("scope", scopes.join(" "))
 
 			reply.redirect(redirectUrl.href)
 		})
 
 		fastify.get('/hca-callback', async (request, reply) => {
-			const { code } = request.query as { code?: string };
+			const { code, state } = request.query as { code?: string; state?: string };
 			if (!code) { reply.code(400).send("Code is required") }
+			if (!state) { reply.code(400).send("State is required") }
 
 			const tokenResponse = await fetch("https://auth.hackclub.com/oauth/token", {
 				method: "POST",
@@ -106,9 +114,11 @@ export class HcaLinkService {
 </head>
 <body>
 	<script>
-		window.opener.postMessage({
+		const bc = new BroadcastChannel('hca_link');
+		bc.postMessage({
 			type: "hca-link",
 			token: ${JSON.stringify(token)},
+			state: ${JSON.stringify(state)},
 			hcaId: ${JSON.stringify(oidTokenPayload.sub)},
 			slackId: ${JSON.stringify(oidTokenPayload.slack_id)}
 		}, ${JSON.stringify(this.config.url)});
