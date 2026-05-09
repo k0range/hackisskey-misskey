@@ -45,6 +45,14 @@ SPDX-License-Identifier: AGPL-3.0-only
 						<template #value><span class="_monospace"><MkTime :time="info.lastActiveDate" :mode="'detail'"/></span></template>
 					</MkKeyValue>
 					<MkKeyValue v-if="info" oneline>
+						<template #key>Hack Club Account ID</template>
+						<template #value><span class="_monospace">{{ info.hcaId }}</span></template>
+					</MkKeyValue>
+					<MkKeyValue v-if="info" oneline>
+						<template #key>Slack ID</template>
+						<template #value><MkLink :url="`https://hackclub.enterprise.slack.com/team/${info.slackId}`">{{ info.slackId }}</MkLink></template>
+					</MkKeyValue>
+					<MkKeyValue v-if="info" oneline>
 						<template #key>{{ i18n.ts.email }}</template>
 						<template #value><span class="_monospace">{{ info.email }}</span></template>
 					</MkKeyValue>
@@ -232,6 +240,7 @@ import { ensureSignin, iAmAdmin, iAmModerator } from '@/i.js';
 import MkRolePreview from '@/components/MkRolePreview.vue';
 import MkPagination from '@/components/MkPagination.vue';
 import { Paginator } from '@/utility/paginator.js';
+import MkLink from '@/components/MkLink.vue';
 
 const $i = ensureSignin();
 

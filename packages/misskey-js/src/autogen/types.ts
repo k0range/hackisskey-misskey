@@ -4326,6 +4326,8 @@ export type components = {
                 /** Format: date-time */
                 lastUsed: string;
             }[];
+            hcaId: string | null;
+            slackId: string | null;
         };
         UserDetailedNotMe: components['schemas']['UserLite'] & components['schemas']['UserDetailedNotMeOnly'];
         MeDetailed: components['schemas']['UserLite'] & components['schemas']['UserDetailedNotMeOnly'] & components['schemas']['MeDetailedOnly'];
@@ -11839,6 +11841,8 @@ export interface operations {
                             expiresAt: string | null;
                             roleId: string;
                         }[];
+                        hcaId: string | null;
+                        slackId: string | null;
                     };
                 };
             };

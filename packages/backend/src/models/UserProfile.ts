@@ -277,6 +277,18 @@ export class MiUserProfile {
 		name: typeof ACHIEVEMENT_TYPES[number];
 		unlockedAt: number;
 	}[];
+	
+	@Index()
+	@Column('varchar', {
+		length: 32, nullable: true
+	})
+	public hcaId: string | null;
+
+	@Index()
+	@Column('varchar', {
+		length: 16, nullable: true
+	})
+	public slackId: string | null;
 
 	//#region Denormalized fields
 	@Index()

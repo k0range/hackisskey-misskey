@@ -696,6 +696,14 @@ export const packedMeDetailedOnlySchema = {
 				},
 			},
 		},
+		hcaId: {
+			type: 'string',
+			nullable: true
+		},
+		slackId: {
+			type: 'string',
+			nullable: true
+		}
 		//#endregion
 	},
 } as const;

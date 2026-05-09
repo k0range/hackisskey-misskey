@@ -7,6 +7,10 @@ SPDX-License-Identifier: AGPL-3.0-only
 <div class="_gaps">
 	<MkInfo>{{ i18n.ts._initialAccountSetting.theseSettingsCanEditLater }}</MkInfo>
 
+	<MkButton @click="importFromSlack">
+		<i class="ti ti-brand-slack"></i> Import profiles from Slack
+	</MkButton>
+
 	<FormSlot>
 		<template #label>{{ i18n.ts.avatar }}</template>
 		<div v-adaptive-bg :class="$style.avatarSection" class="_panel">
@@ -39,6 +43,9 @@ import FormSlot from '@/components/form/slot.vue';
 import MkInfo from '@/components/MkInfo.vue';
 import * as os from '@/os.js';
 import { ensureSignin } from '@/i.js';
+import { misskeyApi } from '@/utility/misskey-api';
+import { useUploader } from '@/composables/use-uploader';
+import { uploadFile } from '@/utility/drive';
 
 const $i = ensureSignin();
 
@@ -92,6 +99,32 @@ async function setAvatar(ev: PointerEvent) {
 	});
 	$i.avatarId = i.avatarId;
 	$i.avatarUrl = i.avatarUrl;
+}
+
+async function importFromSlack() {
+	os.promiseDialog((async () => {
+		const slackProfileRes = await fetch("https://cachet.dunkirk.sh/users/"+$i.slackId)
+		slackProfileRes.ok || Promise.reject(new Error("Failed to fetch Slack profile"));
+		const slackProfile = await slackProfileRes.json();
+
+		const driveFile = uploadFile(await (await fetch("/proxy/preview.webp?url=" + encodeURIComponent(slackProfile.imageUrl), {
+			headers: {
+				Accept: '*/*'
+			}
+		})).blob(), {
+			name: slackProfile.displayName + "'s Avatar",
+			caption: slackProfile.displayName + "'s Avatar"
+		})
+
+		const i = await misskeyApi('i/update', {
+			avatarId: (await driveFile.filePromise).id,
+			name: slackProfile.displayName,
+		});
+		$i.avatarId = i.avatarId;
+		$i.avatarUrl = i.avatarUrl;
+		name.value = slackProfile.displayName
+		$i.name = slackProfile.displayName
+	})())
 }
 </script>
 

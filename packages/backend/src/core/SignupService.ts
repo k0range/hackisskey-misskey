@@ -55,8 +55,10 @@ export class SignupService {
 		passwordHash?: MiUserProfile['password'] | null;
 		host?: string | null;
 		ignorePreservedUsernames?: boolean;
+		hcaId: string;
+		slackId: string;
 	}) {
-		const { username, password, passwordHash, host } = opts;
+		const { username, password, passwordHash, host, hcaId, slackId } = opts;
 		let hash = passwordHash;
 
 		// Validate username
@@ -133,7 +135,7 @@ export class SignupService {
 				username: username,
 				usernameLower: username.toLowerCase(),
 				host: this.utilityService.toPunyNullable(host),
-				token: secret,
+				token: secret
 			}));
 
 			await transactionalEntityManager.save(new MiUserKeypair({
@@ -146,6 +148,8 @@ export class SignupService {
 				userId: account.id,
 				autoAcceptFollowed: true,
 				password: hash,
+				hcaId: hcaId,
+				slackId: slackId
 			}));
 
 			await transactionalEntityManager.save(new MiUsedUsername({

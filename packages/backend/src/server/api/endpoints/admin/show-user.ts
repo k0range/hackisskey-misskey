@@ -179,6 +179,14 @@ export const meta = {
 					},
 				},
 			},
+			hcaId: {
+				type: 'string',
+				nullable: true
+			},
+			slackId: {
+				type: 'string',
+				nullable: true
+			}
 		},
 	},
 } as const;
@@ -259,6 +267,8 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 					expiresAt: a.expiresAt ? a.expiresAt.toISOString() : null,
 					roleId: a.roleId,
 				})),
+				hcaId: profile.hcaId,
+				slackId: profile.slackId
 			};
 		});
 	}

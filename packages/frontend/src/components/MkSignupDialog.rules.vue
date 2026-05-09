@@ -14,6 +14,9 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<MkInfo v-if="instance.disableRegistration" warn>{{ i18n.ts.invitationRequiredToRegister }}</MkInfo>
 				<MkInfo v-if="instance.federation === 'specified'" warn>{{ i18n.ts.federationSpecified }}</MkInfo>
 				<MkInfo v-else-if="instance.federation === 'none'" warn>{{ i18n.ts.federationDisabled }}</MkInfo>
+				<MkInfo warn>
+					This server is for <MkLink url="https://hackclub.com/">Hack Club</MkLink> members only. You must link your Hack Club Account to sign up.
+				</MkInfo>
 			</div>
 
 			<div style="text-align: center;">
@@ -72,6 +75,7 @@ import MkFolder from '@/components/MkFolder.vue';
 import MkSwitch from '@/components/MkSwitch.vue';
 import MkInfo from '@/components/MkInfo.vue';
 import * as os from '@/os.js';
+import MkLink from './MkLink.vue';
 
 const availableServerRules = instance.serverRules.length > 0;
 const availableTos = instance.tosUrl != null && instance.tosUrl !== '';

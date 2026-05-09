@@ -636,6 +636,8 @@ export class UserEntityService implements OnModuleInit {
 						},
 					})
 					: [],
+				hcaId: profile!.hcaId,
+				slackId: profile!.slackId
 			} : {}),
 
 			...(relation ? {
