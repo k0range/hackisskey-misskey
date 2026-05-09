@@ -31,4 +31,16 @@ export class MiUserPending {
 		length: 128,
 	})
 	public password: string;
+	
+	@Index()
+	@Column('varchar', {
+		length: 32, nullable: true
+	})
+	public hcaId?: string;
+
+	@Index()
+	@Column('varchar', {
+		length: 16, nullable: true
+	})
+	public slackId?: string;
 }

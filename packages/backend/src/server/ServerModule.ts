@@ -51,6 +51,7 @@ import { ReversiChannel } from './api/stream/channels/reversi.js';
 import { ReversiGameChannel } from './api/stream/channels/reversi-game.js';
 import { NoteStreamingHidingService } from './api/stream/NoteStreamingHidingService.js';
 import { SigninWithPasskeyApiService } from './api/SigninWithPasskeyApiService.js';
+import { HcaLinkService } from './HcaLinkService.js';
 
 @Module({
 	imports: [
@@ -102,6 +103,7 @@ import { SigninWithPasskeyApiService } from './api/SigninWithPasskeyApiService.j
 		NoteStreamingHidingService,
 		OpenApiServerService,
 		OAuth2ProviderService,
+		HcaLinkService
 	],
 	exports: [
 		ServerService,

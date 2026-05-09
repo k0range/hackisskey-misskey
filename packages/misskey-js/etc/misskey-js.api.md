@@ -3584,6 +3584,7 @@ type SignupRequest = {
     'turnstile-response'?: string | null;
     'm-captcha-response'?: string | null;
     'testcaptcha-response'?: string | null;
+    hcaToken: string;
 };
 
 // @public (undocumented)

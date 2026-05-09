@@ -20,6 +20,7 @@ import { bindThis } from '@/decorators.js';
 import { L_CHARS, secureRndstr } from '@/misc/secure-rndstr.js';
 import { SigninService } from './SigninService.js';
 import type { FastifyRequest, FastifyReply } from 'fastify';
+import jwt from "jsonwebtoken"
 
 @Injectable()
 export class SignupApiService {
@@ -68,6 +69,7 @@ export class SignupApiService {
 				'turnstile-response'?: string;
 				'm-captcha-response'?: string;
 				'testcaptcha-response'?: string;
+				hcaToken: string;
 			}
 		}>,
 		reply: FastifyReply,
@@ -113,6 +115,7 @@ export class SignupApiService {
 		const host: string | null = process.env.NODE_ENV === 'test' ? (body['host'] ?? null) : null;
 		const invitationCode = body['invitationCode'];
 		const emailAddress = body['emailAddress'];
+		const hcaToken = body['hcaToken'];
 
 		if (this.meta.emailRequiredForSignup) {
 			if (emailAddress == null || typeof emailAddress !== 'string') {
@@ -128,6 +131,22 @@ export class SignupApiService {
 		}
 
 		let ticket: MiRegistrationTicket | null = null;
+		
+		let hcaId: string;
+		let slackId: string;
+
+		if (hcaToken) {
+			const token = jwt.verify(hcaToken, this.config.jwtSecret, {
+				issuer: this.config.url,
+				audience: "hca-link"
+			}) as unknown as { hca_id: string; slack_id: string; }
+
+			hcaId = token.hca_id
+			slackId = token.slack_id
+		} else {
+			reply.code(400).send("HCA token is required")
+			return
+		}
 
 		// テスト時はこの機構は障害となるため無効にする
 		if (process.env.NODE_ENV !== 'test' && this.meta.disableRegistration) {
@@ -196,6 +215,8 @@ export class SignupApiService {
 				email: emailAddress!,
 				username: username,
 				password: hash,
+				hcaId: hcaId,
+				slackId: slackId
 			});
 
 			const link = `${this.config.url}/signup-complete/${code}`;
@@ -216,7 +237,7 @@ export class SignupApiService {
 		} else {
 			try {
 				const { account, secret } = await this.signupService.signup({
-					username, password, host,
+					username, password, host, hcaId, slackId
 				});
 
 				const res = await this.userEntityService.pack(account, account, {
@@ -258,6 +279,8 @@ export class SignupApiService {
 			const { account } = await this.signupService.signup({
 				username: pendingUser.username,
 				passwordHash: pendingUser.password,
+				hcaId: pendingUser.hcaId,
+				slackId: pendingUser.slackId
 			});
 
 			this.userPendingsRepository.delete({
