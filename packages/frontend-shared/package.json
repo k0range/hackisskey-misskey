@@ -24,7 +24,7 @@
 		"@types/node": "24.12.2",
 		"@typescript-eslint/eslint-plugin": "8.58.2",
 		"@typescript-eslint/parser": "8.58.2",
-		"esbuild": "0.28.0",
+		"esbuild": "0.28.1",
 		"eslint-plugin-vue": "10.8.0",
 		"nodemon": "3.1.14",
 		"vue-eslint-parser": "10.4.0"
