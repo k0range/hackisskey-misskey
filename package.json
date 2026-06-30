@@ -75,7 +75,7 @@
 		"eslint": "9.39.4",
 		"globals": "17.5.0",
 		"ncp": "2.0.0",
-		"pnpm": "10.33.0",
+		"pnpm": "10.34.4",
 		"start-server-and-test": "3.0.2",
 		"typescript": "5.9.3"
 	},
